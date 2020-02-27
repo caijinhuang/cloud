@@ -1,0 +1,20 @@
+server:
+  port: 8891
+  servlet:
+    context-path: /access
+spring:
+  application:
+    name: access
+  cloud:
+    config:
+      enabled: false
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    status-page-url-path: http://${spring.cloud.client.ip-address}:${server.port}${server.servlet.context-path}/swagger-ui.html#/
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://root:root@localhost:8761/eureka/

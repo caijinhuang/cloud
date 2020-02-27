@@ -1,0 +1,16 @@
+version: '3' #使用的docker-compose版本语言
+services:
+  cloud:
+    container_name: eureka-server
+    image: eureka-server:0.0.1
+    build:
+      context: ./
+      dockerfile: DockerfileCompose
+      args:
+        APP: "eureka-server"
+    ports:
+      - "8762:8762"
+    extra_hosts: #配置网络映射，容器和宿主机之间的映射网络
+      - "localhost:10.1.11.138"
+    environment:
+      PROFILE: "slave-1"

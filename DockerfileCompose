@@ -1,0 +1,10 @@
+FROM java
+MAINTAINER cjh
+VOLUME /app
+EXPOSE 8888
+ARG APP
+ADD target/${APP}.jar /app/app.jar
+ADD run.sh /app/run.sh
+RUN chmod +x /app/run.sh
+CMD ["sh","/app/run.sh"]
+#ENTRYPOINT ["java","-jar","/app/app.jar"]

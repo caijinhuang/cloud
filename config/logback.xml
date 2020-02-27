@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+
+        <springProperty scope="context" name="logPath" source="log.path"/>
+        <property name="FILE_TALC_ERROR" value="log/servicename_talc"/>
+        <property name="FILE_SLA_ERROR" value="log/servicename_metrics"/>
+<!--    <springProperty scope="context" name="logPath" source="logs.path"/>-->
+<!--    <property name="FILE_TALC_ERROR" value="/Users/zhang/Workspaces/idea/csc/logs/servicename_talc"/>-->
+<!--    <property name="FILE_SLA_ERROR" value="/Users/zhang/Workspaces/idea/csc/logs/servicename_metrics"/>-->
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="sla" converterClass="com.huawei.paas.cse.tracing.sla.SLAFileAppender"/>
+    <conversionRule conversionWord="talc" converterClass="com.huawei.paas.cse.tracing.span.SpanFileAppender"/>
+
+    <property name="CONSOLE_LOG_PATTERN_EN"
+              value="%clr([DATE: %d{yyyy-MM-dd HH:mm:ss.SSS}]){faint} %clr([LEVEL: ${LOG_LEVEL_PATTERN:-%5p}]) %clr([PID: ${PID:- }]){magenta} %clr([THREAD: %15.15t]){faint} %clr([LINE:%5.5L]){magenta} %clr([CLASS: %-40.40logger{39}]){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="SLA_LOG" value="%m%n"/>
+
+    <appender name="CONSOLE_EN" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>utf8</charset>
+            <pattern>${CONSOLE_LOG_PATTERN_EN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成日志文件 -->
+    <appender name="sla" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志文件输出的文件名 -->
+        <File>${FILE_SLA_ERROR}.dat</File>
+        <!--滚动日志 基于时间和文件大小-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动日志文件保存格式 -->
+            <FileNamePattern>${FILE_SLA_ERROR}_%d{yyyy-MM-dd}_%i.dat</FileNamePattern>
+            <MaxFileSize>100MB</MaxFileSize>
+            <MaxHistory>100</MaxHistory>
+        </rollingPolicy>
+        <!-- 按临界值过滤日志：低于ERROR以下级别被抛弃 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>${SLA_LOG}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成日志文件 -->
+<!--    <appender name="talc" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        &lt;!&ndash;日志文件输出的文件名 &ndash;&gt;-->
+<!--        <File>${FILE_TALC_ERROR}.dat</File>-->
+<!--        &lt;!&ndash;滚动日志 基于时间和文件大小&ndash;&gt;-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+<!--            &lt;!&ndash; 滚动日志文件保存格式 &ndash;&gt;-->
+<!--            <FileNamePattern>${FILE_TALC_ERROR}_%d{yyyy-MM-dd}_%i.dat</FileNamePattern>-->
+<!--            <MaxFileSize>100MB</MaxFileSize>-->
+<!--            <MaxHistory>100</MaxHistory>-->
+<!--        </rollingPolicy>-->
+<!--        &lt;!&ndash; 按临界值过滤日志：低于ERROR以下级别被抛弃 &ndash;&gt;-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>ERROR</level>-->
+<!--        </filter>-->
+<!--        <encoder>-->
+<!--            <pattern>${SLA_LOG}</pattern>-->
+<!--            <charset>UTF-8</charset>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+    <!--  基本日志打印  -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_EN"/>
+    </root>
+
+
+</configuration>

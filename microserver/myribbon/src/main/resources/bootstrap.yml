@@ -1,0 +1,21 @@
+server:
+  port: 8892
+  servlet:
+    context-path: /ribbon
+spring:
+  application:
+    name: ribbon-server
+  cloud:
+    config:
+      enabled: false
+#      uri: http://localhost:8889
+eureka:
+  instance:
+    prefer-ip-address: true
+    status-page-url-path: http://${spring.cloud.client.ip-address}:${server.port}${server.servlet.context-path}/swagger-ui.html#/
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://root:root@localhost:8762/eureka/
