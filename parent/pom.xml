@@ -21,6 +21,7 @@
         <java.version>1.8</java.version>
         <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
         <fastjson.version>1.2.62</fastjson.version>
+        <springboot.mybatis.version>2.1.0</springboot.mybatis.version>
     </properties>
 
     <!-- 规范示例版本 -->
@@ -33,10 +34,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${springboot.mybatis.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -64,6 +66,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

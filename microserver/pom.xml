@@ -39,6 +39,8 @@
         <module>kafka</module>
         <module>nio</module>
         <module>socket</module>
+        <module>redis</module>
+        <module>redis-api</module>
     </modules>
 
 
