@@ -1,5 +1,6 @@
 package com.cjh.microserver.myribbon.api.service;
 
+import com.cjh.common.response.dto.ResponseResult;
 import com.cjh.microserver.myribbon.api.dto.House;
 
 /**
@@ -13,4 +14,7 @@ public interface RibbonService {
     public House getDataByName();
 
     public House getDataByName(House house);
+
+
+    public ResponseResult getData(House house);
 }
