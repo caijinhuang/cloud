@@ -6,7 +6,7 @@ package com.cjh.common.exception.constants;
  * @author cjh
  * @date 2020/3/9 9:52
  **/
-public interface ErrorCodeHandler {
+public interface ErrorCode {
     /**
      * 系统级
      */

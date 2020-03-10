@@ -9,11 +9,12 @@ import lombok.AllArgsConstructor;
  * @date 2020/3/9 9:46
  **/
 @AllArgsConstructor
-public enum BusinessErrorCode implements ErrorCodeHandler {
+public enum BusinessErrorCode implements ErrorCode {
     /**
      * 参数异常
      */
-    ARGS_ERROR("1001", "参数异常！");
+    ARGS_ERROR("1001", "参数异常！"),
+    DB_OPERATION_EXCEPTION("1002", "数据库操作异常！");
 
     /**
      * 错误码

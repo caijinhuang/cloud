@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
  * @date 2020/3/9 9:46
  **/
 @AllArgsConstructor
-public enum SysErrorCode implements ErrorCodeHandler {
+public enum SysErrorCode implements ErrorCode {
     /**
      * 异常错误提示枚举
      */
@@ -27,7 +27,7 @@ public enum SysErrorCode implements ErrorCodeHandler {
 
     @Override
     public String getCode() {
-        return SYSTEM + getCode();
+        return SYSTEM + this.code;
     }
 
     @Override

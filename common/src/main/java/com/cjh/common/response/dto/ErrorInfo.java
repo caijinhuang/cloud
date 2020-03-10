@@ -1,6 +1,6 @@
 package com.cjh.common.response.dto;
 
-import com.cjh.common.exception.constants.ErrorCodeHandler;
+import com.cjh.common.exception.constants.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,13 +20,13 @@ public class ErrorInfo {
     public String code;
     public String msg;
 
-    public ErrorInfo(ErrorCodeHandler errorCodeHandler) {
-        this.code = errorCodeHandler.getCode();
-        this.msg = errorCodeHandler.getMsg();
+    public ErrorInfo(ErrorCode errorCode) {
+        this.code = errorCode.getCode();
+        this.msg = errorCode.getMsg();
     }
 
-    public ErrorInfo(ErrorCodeHandler errorCodeHandler, String msg) {
-        this(errorCodeHandler);
+    public ErrorInfo(ErrorCode errorCode, String msg) {
+        this(errorCode);
         this.msg = msg;
     }
 }

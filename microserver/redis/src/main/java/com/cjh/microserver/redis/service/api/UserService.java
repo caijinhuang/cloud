@@ -20,5 +20,5 @@ public interface UserService {
      * @param userReq 用户基础信息
      * @return
      */
-    boolean saveUser(UserReq userReq);
+    int saveUser(UserReq userReq);
 }

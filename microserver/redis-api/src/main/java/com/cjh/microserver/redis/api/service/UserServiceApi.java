@@ -1,9 +1,11 @@
 package com.cjh.microserver.redis.api.service;
 
+import com.cjh.common.exception.dto.SysInvocationException;
 import com.cjh.common.response.dto.ResponseResult;
 import com.cjh.microserver.redis.api.dto.UserReq;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @author cjh
@@ -23,6 +25,6 @@ public interface UserServiceApi {
      * @param userReq 用户对象信息
      * @return result
      */
-    ResponseResult save(@Valid UserReq userReq);
+    Map save(@Valid UserReq userReq);
 
 }

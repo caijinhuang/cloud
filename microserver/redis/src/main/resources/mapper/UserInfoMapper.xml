@@ -31,7 +31,7 @@
       #{openId,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.cjh.microserver.redis.data.model.UserInfo" >
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="userId" parameterType="com.cjh.microserver.redis.data.model.UserInfo" >
     insert into KTR_USER_INFO
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >

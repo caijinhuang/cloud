@@ -1,5 +1,7 @@
 package com.cjh.common.response.dto;
 
+import com.cjh.common.exception.constants.ErrorCode;
+import com.cjh.common.exception.dto.SysInvocationException;
 import com.cjh.common.response.constants.ResponseStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,8 +46,18 @@ public class ResponseResult<T> {
         return this;
     }
 
+    public ResponseResult error(ErrorCode errorCode){
+        setError(new ErrorInfo(errorCode));
+        return this;
+    }
+
     public ResponseResult error(ErrorInfo error) {
         setError(error);
+        return this;
+    }
+
+    public ResponseResult error(SysInvocationException e) {
+        setError(e.getError());
         return this;
     }
 

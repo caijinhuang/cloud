@@ -1,15 +1,19 @@
 package com.cjh.microserver.redis.controller;
 
+import com.cjh.common.exception.dto.SysInvocationException;
 import com.cjh.common.response.dto.ResponseResult;
+import com.cjh.common.utils.MapUtil;
 import com.cjh.microserver.redis.api.dto.UserReq;
 import com.cjh.microserver.redis.api.service.UserServiceApi;
 import com.cjh.microserver.redis.data.model.UserInfo;
 import com.cjh.microserver.redis.service.api.UserService;
 import io.swagger.annotations.ApiOperation;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @author cjh
@@ -31,12 +35,13 @@ public class UserController implements UserServiceApi {
         return ResponseResult.builder().data(userInfo);
     }
 
+    @SneakyThrows
     @Override
     @PostMapping("/save")
     @ApiOperation(value = "保存用户信息", notes = "保存用户信息", tags = {"user"})
     @ResponseBody
-    public ResponseResult save(@RequestBody @Valid UserReq userReq) {
-        boolean success = userService.saveUser(userReq);
-        return ResponseResult.builder().data("保存成功！");
+    public Map save(@RequestBody @Valid UserReq userReq) {
+        int id = userService.saveUser(userReq);
+        return MapUtil.builder().put("userId", id).build();
     }
 }
