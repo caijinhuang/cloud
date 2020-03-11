@@ -1,6 +1,7 @@
 package com.cjh.microserver.redis.controller;
 
 import com.cjh.common.exception.dto.SysInvocationException;
+import com.cjh.common.response.RestWrap;
 import com.cjh.common.response.dto.ResponseResult;
 import com.cjh.common.utils.MapUtil;
 import com.cjh.microserver.redis.api.dto.UserReq;
@@ -19,6 +20,7 @@ import java.util.Map;
  * @author cjh
  * @date 2020/3/9 20:27
  **/
+@RestWrap
 @RestController
 @RequestMapping("/v1/user")
 public class UserController implements UserServiceApi {
