@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerExecutionChain;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMappingJacksonResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -37,14 +35,11 @@ public class ResponseAdvice extends AbstractMappingJacksonResponseBodyAdvice {
                                            MethodParameter returnType,
                                            ServerHttpRequest request,
                                            ServerHttpResponse response) {
-        HandlerExecutionChain handler = getMapperHandler(((ServletServerHttpRequest)request).getServletRequest());
+
         // 具有RestWrap注解的类的响应才会被包装。
-        Annotation[] annotations = returnType.getContainingClass().getAnnotations();
-        for (Annotation annotation : annotations) {
-            if (annotation instanceof RestWrap) {
-                populateBody(bodyContainer);
-                return;
-            }
+        if (returnType.getContainingClass().isAnnotationPresent(RestWrap.class)) {
+            populateBody(bodyContainer);
+            return;
         }
 
     }
@@ -57,6 +52,12 @@ public class ResponseAdvice extends AbstractMappingJacksonResponseBodyAdvice {
         }
     }
 
+    /**
+     * 获取Handler
+     * HandlerExecutionChain handler = getMapperHandler(((ServletServerHttpRequest) request).getServletRequest());
+     * @param request 请求入参。
+     * @return
+     */
     @SneakyThrows
     private HandlerExecutionChain getMapperHandler(HttpServletRequest request) {
         List<HandlerMapping> handlerMappings = dispatcherServlet.getHandlerMappings();

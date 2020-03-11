@@ -21,11 +21,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Log4j2
 public class SwaggerConfig {
 
-    /**
-     * SpringBoot默认已经将classpath:/META-INF/resources/和classpath:/META-INF/resources/webjars/映射
-     * 所以该方法不需要重写，如果在SpringMVC中，可能需要重写定义（我没有尝试）
-     * 重写该方法需要 extends WebMvcConfigurerAdapter
-     */
     @Bean
     public Docket createRestApi() {
         Predicate<RequestHandler> predicate = new Predicate<RequestHandler>() {
