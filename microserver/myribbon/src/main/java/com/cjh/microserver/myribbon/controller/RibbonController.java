@@ -1,5 +1,6 @@
 package com.cjh.microserver.myribbon.controller;
 
+import com.cjh.common.response.RestWrap;
 import com.cjh.common.response.dto.ResponseResult;
 import com.cjh.microserver.myribbon.api.dto.House;
 import com.cjh.microserver.myribbon.api.service.RibbonService;
@@ -14,6 +15,7 @@ import javax.validation.Valid;
  * @author cjh
  * @date 2020/1/6 16:21
  **/
+@RestWrap
 @Log4j2
 @Controller
 @RequestMapping("/v1/house")
