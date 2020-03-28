@@ -41,6 +41,7 @@
         <module>socket</module>
         <module>redis</module>
         <module>redis-api</module>
+        <module>activiti</module>
     </modules>
 
 
