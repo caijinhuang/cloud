@@ -9,6 +9,8 @@ import com.cjh.microserver.redis.data.model.UserInfo;
 import com.cjh.microserver.redis.service.api.UserService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,6 +21,7 @@ import javax.annotation.Resource;
  **/
 @Log4j2
 @Service
+@CacheConfig(cacheNames = "redis_test")
 public class UserServiceImpl implements UserService {
 
     @Resource
@@ -39,5 +42,17 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new SysInvocationException(BusinessErrorCode.DB_OPERATION_EXCEPTION, "用户信息保存失败！", e);
         }
+    }
+
+    @Override
+    @Cacheable(value = "name")
+    public String getName(){
+        return "缺省值";
+    }
+
+    @Override
+    @Cacheable(value = "name")
+    public String putName(String name) {
+        return name;
     }
 }

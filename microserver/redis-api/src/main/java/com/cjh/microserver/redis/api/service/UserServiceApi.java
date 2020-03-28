@@ -27,4 +27,8 @@ public interface UserServiceApi {
      */
     Map save(@Valid UserReq userReq);
 
+    int putName(String name);
+
+    String getName();
+
 }

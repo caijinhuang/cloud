@@ -21,4 +21,8 @@ public interface UserService {
      * @return
      */
     int saveUser(UserReq userReq);
+
+    String getName();
+
+    String putName(String name);
 }

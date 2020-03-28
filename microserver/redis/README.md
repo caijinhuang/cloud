@@ -21,7 +21,7 @@ mvn clean install
 - idea配置
 > - 右键项目 >> NEW >> Module >> Maven >> 勾选 Create from archetype >> Add archetype  
 > - 找到target\generated-sources\archetype\pom.xml
-> - 将以下内容填入
+> - 找到pom文件中的一下节点，将节点内容填入框中，例如下：
 > ```xml
 >  <groupId>com.cjh.microserver</groupId>
 >  <artifactId>redis-archetype</artifactId>
