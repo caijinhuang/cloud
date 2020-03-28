@@ -1,0 +1,38 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /activiti
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/KTR?characterEncoding=utf8&charset=utf8&serverTimezone=UTC&useSSL=false
+    username: root
+    password: root
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 5
+      pool-name: test pool 001
+      max-lifetime: 60000
+      connection-timeout: 3000
+  application:
+    name: activiti
+  cloud:
+    config:
+      enabled: false
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    status-page-url-path: http://${spring.cloud.client.ip-address}:${server.port}${server.servlet.context-path}/swagger-ui.html#/
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://root:root@localhost:8761/eureka/
