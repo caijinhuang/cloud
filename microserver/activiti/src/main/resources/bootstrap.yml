@@ -7,7 +7,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/KTR?characterEncoding=utf8&charset=utf8&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/activiti?characterEncoding=utf8&charset=utf8&serverTimezone=UTC&useSSL=false
     username: root
     password: root
     hikari:
@@ -22,8 +22,15 @@ spring:
     config:
       enabled: false
 
+
+  activiti:
+    database-schema-update: true
+    history-level: full
+
 mybatis:
   mapper-locations: classpath*:mapper/**/*.xml
+
+
 
 
 eureka:
