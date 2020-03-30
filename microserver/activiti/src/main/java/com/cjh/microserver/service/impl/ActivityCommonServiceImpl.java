@@ -6,7 +6,6 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -38,7 +37,7 @@ public class ActivityCommonServiceImpl implements ActivityCommonService {
 
     @Override
     public void apply(String processDefinitionKey, Map variable) {
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, variable);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey,"20200330666", variable);
         Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
         taskService.complete(task.getId(), variable);
     }
@@ -92,11 +91,11 @@ public class ActivityCommonServiceImpl implements ActivityCommonService {
     }
 
     @Override
-    public void queryHistoricInstance(String processInstanceId) {
+    public void queryHistoricInstance(String businessKey) {
         List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
                 .orderByHistoricTaskInstanceEndTime()
+                .processInstanceBusinessKey(businessKey)
                 .asc()//排序
-                .processInstanceId(processInstanceId)
                 .list();
         if (list != null && list.size() > 0) {
             for (HistoricTaskInstance task : list) {
@@ -104,6 +103,8 @@ public class ActivityCommonServiceImpl implements ActivityCommonService {
                 log.info("流程实例ID：" + task.getId());
                 log.info("任务名称：" + task.getName());
                 log.info("任务处理人：" + task.getAssignee());
+                log.info("任务节点ID：" + task.getTaskDefinitionKey());
+                log.info("父节点ID：" + task.getParentTaskId());
                 log.info("开始时间：" + task.getStartTime());
                 log.info("结束时间：" + task.getEndTime());
                 log.info("流程持续时间：" + task.getDurationInMillis());

@@ -53,7 +53,11 @@ public interface ActivityCommonService {
      */
     List<HistoricTaskInstance> queryCompletedByUser(String processDefinitionKey, String userId);
 
-    void queryHistoricInstance(String processInstanceId);
+    /**
+     * 通过流程实例查询历史实例
+     * @param businessKey 业务id
+     */
+    void queryHistoricInstance(String businessKey);
 
     /**
      * 任务签收

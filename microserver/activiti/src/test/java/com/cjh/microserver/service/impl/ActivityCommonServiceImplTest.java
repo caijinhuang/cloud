@@ -72,11 +72,12 @@ public class ActivityCommonServiceImplTest {
     public void queryCompletedByUser() {
         List<HistoricTaskInstance> hisTask = activityCommonService.queryCompletedByUser(PROCESS_DEFINITION_KEY,"141304093");
         for (HistoricTaskInstance task : hisTask) {
-            activityCommonService.queryHistoricInstance(task.getProcessInstanceId());
             log.info("##################################\n");
-//            show(task);
+            show(task);
         }
     }
+
+
 
     @Test
     public void claim() {
@@ -94,5 +95,10 @@ public class ActivityCommonServiceImplTest {
         log.info("任务名称:" + task.getName());
         log.info("任务的创建时间:" + task.getCreateTime());
         log.info("#####################################");
+    }
+
+    @Test
+    public void queryHistoricInstance() {
+        activityCommonService.queryHistoricInstance("20200330666");
     }
 }
