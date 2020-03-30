@@ -11,6 +11,7 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskInfo;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,40 +85,65 @@ public class ActivityConsumerServiceImpl implements ActivityConsumerService {
     public void apply(Map map) {
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("leave", map);
         Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
-        taskService.complete(task.getId());
+        taskService.complete(task.getId(), map);
     }
 
     @Override
-    public void pendingAudit(String groupName) {
-//        List<String> groups = new ArrayList<>();
-//        groups.add(groupName);
-//        List<Task> tasks = taskService.createTaskQuery()
-//                .processDefinitionKey("leave")
-//                .taskAssignee(groupName)
-//                .listPage(0, 10);
+    public List<Task> pendingAudit(String key) {
+        // 待办
+        List<Task> tasks = taskService.createTaskQuery()
+                .processDefinitionKey("leave")
+//                .taskCandidateUser("123")
+//                .taskCandidateGroup(key)
+                .taskCandidateOrAssigned(key)
+                .listPage(0, 10);
+
+        log.info("有{}条待办",tasks.size());
+        tasks.forEach(task->{
+            show(task);
+        });
+        log.info("展示结束");
+        return tasks;
+    }
+
+    @Override
+    public List<HistoricTaskInstance> queryCompleted(String groupName){
+        // 已办
         List<HistoricTaskInstance> tasks = historyService.createHistoricTaskInstanceQuery()
                 .processDefinitionKey("leave")
                 .taskAssignee(groupName)
                 .finished()
                 .listPage(0,10);
-        log.info("有{}条待办",tasks.size());
+        log.info("有{}条已办结任务",tasks.size());
         tasks.forEach(task->{
-            log.info("任务ID:" + task.getId());
-            log.info("任务的办理人:" + task.getAssignee());
-            log.info("任务名称:" + task.getName());
-            log.info("任务的创建时间:" + task.getCreateTime());
-            log.info("#####################################");
+           show(task);
         });
         log.info("展示结束");
+        return tasks;
+    }
+
+    private void show(TaskInfo task){
+        log.info("任务ID:" + task.getId());
+        log.info("任务的办理人:" + task.getAssignee());
+        log.info("任务名称:" + task.getName());
+        log.info("任务的创建时间:" + task.getCreateTime());
+        log.info("#####################################");
     }
 
     @Override
-    public void audit(String id) {
+    public void claim(String taskId, String userId) {
+        taskService.claim(taskId, userId);
+        log.info("用户{},签收任务成功",userId);
+    }
+
+    @Override
+    public void audit(Map map) {
+        String id = MapUtils.getString(map, "id");
         Task task = taskService.createTaskQuery().taskId(id).singleResult();
         log.info("任务ID:" + task.getId());
         log.info("任务的办理人:" + task.getAssignee());
         log.info("任务名称:" + task.getName());
         log.info("任务的创建时间:" + task.getCreateTime());
-        taskService.complete(id,MapUtil.builder().put("pass",true).build());
+        taskService.complete(id, map);
     }
 }

@@ -3,13 +3,13 @@
   <process id="leave" isExecutable="true" isClosed="false" processType="None">
     <startEvent id="_2" name="StartEvent"></startEvent>
     <endEvent id="_3" name="EndEvent"></endEvent>
-    <userTask id="approve" name="经理审批" activiti:assignee="${approve}" activiti:candidateGroups="${groups}"></userTask>
+    <userTask id="approve" name="经理审批" activiti:candidateUsers="${userIds}" activiti:candidateGroups="${groups}"></userTask>
     <exclusiveGateway id="_5" name="ExclusiveGateway"></exclusiveGateway>
     <sequenceFlow id="_6" sourceRef="approve" targetRef="_5"></sequenceFlow>
     <sequenceFlow id="_7" name="通过" sourceRef="_5" targetRef="_3">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${pass}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="application" name="提交申请" activiti:assignee="${apply}"></userTask>
+    <userTask id="application" name="提交申请" activiti:assignee="${apply}" activiti:candidateGroups="${groups}"></userTask>
     <sequenceFlow id="_9" sourceRef="_2" targetRef="application"></sequenceFlow>
     <sequenceFlow id="_10" sourceRef="application" targetRef="approve"></sequenceFlow>
     <userTask id="modify" name="修改申请" activiti:assignee="${apply}"></userTask>
@@ -46,7 +46,7 @@
         <omgdi:waypoint x="640.0" y="240.0"></omgdi:waypoint>
         <omgdi:waypoint x="725.0" y="240.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="650.0" y="240.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="24.0" x="650.0" y="240.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_9" id="BPMNEdge__9">
@@ -62,7 +62,7 @@
         <omgdi:waypoint x="620.0" y="337.0"></omgdi:waypoint>
         <omgdi:waypoint x="495.0" y="337.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="630.0" y="260.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="36.0" x="630.0" y="260.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_13" id="BPMNEdge__13">

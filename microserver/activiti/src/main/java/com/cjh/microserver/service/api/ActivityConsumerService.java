@@ -1,5 +1,9 @@
 package com.cjh.microserver.service.api;
 
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.task.Task;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,11 +29,25 @@ public interface ActivityConsumerService {
      * 待审批
      * @param groupName
      */
-    void pendingAudit(String groupName);
+    List<Task> pendingAudit(String key);
+
+    /**
+     * 已办结
+     * @param groupName
+     * @return
+     */
+    List<HistoricTaskInstance> queryCompleted(String groupName);
+
+    /**
+     *
+     * @param taskId
+     * @param userId
+     */
+    void claim(String taskId, String userId);
 
     /**
      * 审批
-     * @param id 任务id
+     * @param map map
      */
-    void audit(String id);
+    void audit(Map map);
 }

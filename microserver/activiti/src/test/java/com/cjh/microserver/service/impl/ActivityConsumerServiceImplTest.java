@@ -4,12 +4,14 @@ import com.cjh.common.utils.MapUtil;
 import com.cjh.microserver.ActivitiApplication;
 import com.cjh.microserver.service.api.ActivityConsumerService;
 import lombok.extern.log4j.Log4j2;
+import org.activiti.engine.task.Task;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,18 +34,32 @@ public class ActivityConsumerServiceImplTest {
 
     @Test
     public void apply() {
-        Map map = MapUtil.builder().put("apply", "小菜提交申请1").put("approve", "小叶审批1").put("groups","myGroup666").build();
+        Map map = MapUtil.builder()
+                .put("apply", "小王")
+                .put("approve", "老王")
+                .put("groups","myGroup")
+                .put("userIds","123,456")
+                .build();
         activityConsumerService.apply(map);
     }
 
     @Test
     public void audit() {
-        activityConsumerService.audit("37503");
+        String singer = "456";
+        List<Task> pendingTask = activityConsumerService.pendingAudit(singer);
+        pendingTask.forEach(task->{
+            activityConsumerService.claim(task.getId(),singer);
+            activityConsumerService.audit(MapUtil.builder()
+                    .put("id",task.getId())
+                    .put("pass",false)
+                    .build());
+            log.info("任务：{},id:{},已被【{}】处理！", task.getName(), task.getId(), singer);
+        });
     }
 
     @Test
     public void pendingAudit() {
-        activityConsumerService.pendingAudit("小叶审批1");
+        activityConsumerService.pendingAudit("456");
     }
 
     @Test
