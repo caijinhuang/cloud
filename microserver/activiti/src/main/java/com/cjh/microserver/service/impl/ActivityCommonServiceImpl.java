@@ -6,6 +6,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -88,6 +89,27 @@ public class ActivityCommonServiceImpl implements ActivityCommonService {
                 .listPage(0, 10);
         log.info("有{}条已办结任务", tasks.size());
         return tasks;
+    }
+
+    @Override
+    public void queryHistoricInstance(String processInstanceId) {
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                .orderByHistoricTaskInstanceEndTime()
+                .asc()//排序
+                .processInstanceId(processInstanceId)
+                .list();
+        if (list != null && list.size() > 0) {
+            for (HistoricTaskInstance task : list) {
+                log.info("流程定义ID：" + task.getProcessDefinitionId());
+                log.info("流程实例ID：" + task.getId());
+                log.info("任务名称：" + task.getName());
+                log.info("任务处理人：" + task.getAssignee());
+                log.info("开始时间：" + task.getStartTime());
+                log.info("结束时间：" + task.getEndTime());
+                log.info("流程持续时间：" + task.getDurationInMillis());
+                log.info("=======================================");
+            }
+        }
     }
 
     @Override

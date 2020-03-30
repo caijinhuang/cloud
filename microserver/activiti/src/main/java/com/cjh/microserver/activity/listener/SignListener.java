@@ -47,7 +47,7 @@ public class SignListener implements TaskListener {
             Integer complete = (Integer) runtimeService.getVariable(exId, "nrOfCompletedInstances");
             Integer all = (Integer) runtimeService.getVariable(exId, "nrOfInstances");
             //说明都完成了并且没有人拒绝
-            if (complete.equals(all)) {
+            if (all.equals(complete + 1)) {
                 log.info("全部会签结束！进入下一个节点");
                 runtimeService.setVariable(exId, "result", "Y");
                 //下个任务

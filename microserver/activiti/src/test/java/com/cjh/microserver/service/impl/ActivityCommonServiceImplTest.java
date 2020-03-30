@@ -37,6 +37,7 @@ public class ActivityCommonServiceImplTest {
         List<String> signList = new ArrayList<>();
         signList.add("141304092");
         signList.add("141304093");
+        signList.add("141304094");
         activityCommonService.apply(PROCESS_DEFINITION_KEY, MapUtil.builder()
                 .put("userId", "141304091")
                 .put("signList", signList)
@@ -49,11 +50,16 @@ public class ActivityCommonServiceImplTest {
 
     @Test
     public void queryPendingAuditByUser() {
-        List<Task> tasks = activityCommonService.queryPendingAuditByUser(PROCESS_DEFINITION_KEY,"system");
+        List<Task> tasks = activityCommonService.queryPendingAuditByUser(PROCESS_DEFINITION_KEY,"141304093");
         for (Task task : tasks) {
             show(task);
+            List<String> signList = new ArrayList<>();
+//            signList.add("141304092");
+            signList.add("141304093");
+//            signList.add("141304094");
             activityCommonService.audit(PROCESS_DEFINITION_KEY,task.getId(),MapUtil.builder()
                     .put("pass",true)
+//                    .put("signList", signList)
                     .build());
         }
     }
@@ -66,7 +72,9 @@ public class ActivityCommonServiceImplTest {
     public void queryCompletedByUser() {
         List<HistoricTaskInstance> hisTask = activityCommonService.queryCompletedByUser(PROCESS_DEFINITION_KEY,"141304093");
         for (HistoricTaskInstance task : hisTask) {
-            show(task);
+            activityCommonService.queryHistoricInstance(task.getProcessInstanceId());
+            log.info("##################################\n");
+//            show(task);
         }
     }
 

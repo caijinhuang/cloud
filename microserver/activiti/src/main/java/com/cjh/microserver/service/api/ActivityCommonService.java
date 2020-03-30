@@ -53,6 +53,8 @@ public interface ActivityCommonService {
      */
     List<HistoricTaskInstance> queryCompletedByUser(String processDefinitionKey, String userId);
 
+    void queryHistoricInstance(String processInstanceId);
+
     /**
      * 任务签收
      * @param processDefinitionKey 流程定义key
