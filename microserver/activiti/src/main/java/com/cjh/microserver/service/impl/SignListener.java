@@ -18,11 +18,6 @@ import org.activiti.engine.task.Task;
 @Log4j2
 public class SignListener implements TaskListener {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void notify(DelegateTask delegateTask) {
         log.info("会签监听");
@@ -41,6 +36,7 @@ public class SignListener implements TaskListener {
          * 	值得注意的是如果一个审批人完成了审批进入到该监听时nrOfCompletedInstances的值还没有更新，因此需要+1
          */
         if (pass == false) {
+            log.info("审批被拒绝！");
             //会签结束，设置参数result为N，下个任务为申请
             runtimeService.setVariable(exId, "result", "N");
             //下个任务
@@ -51,7 +47,8 @@ public class SignListener implements TaskListener {
             Integer complete = (Integer) runtimeService.getVariable(exId, "nrOfCompletedInstances");
             Integer all = (Integer) runtimeService.getVariable(exId, "nrOfInstances");
             //说明都完成了并且没有人拒绝
-            if ((complete + 1) / all == 1) {
+            if (complete.equals(all)) {
+                log.info("全部会签结束！进入下一个节点");
                 runtimeService.setVariable(exId, "result", "Y");
                 //下个任务
                 String processInstanceId = delegateTask.getProcessInstanceId();

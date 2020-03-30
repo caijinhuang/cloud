@@ -3,7 +3,6 @@ package com.cjh.microserver.service.impl;
 import com.cjh.common.utils.MapUtil;
 import com.cjh.microserver.ActivitiApplication;
 import com.cjh.microserver.service.api.ActivityCommonService;
-import com.cjh.microserver.service.api.ActivityConsumerService;
 import lombok.extern.log4j.Log4j2;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
@@ -34,6 +33,7 @@ public class ActivityCommonServiceImplTest {
 
     @Test
     public void apply() {
+        // 添加会签
         List<String> signList = new ArrayList<>();
         signList.add("141304092");
         signList.add("141304093");
@@ -53,7 +53,7 @@ public class ActivityCommonServiceImplTest {
         for (Task task : tasks) {
             show(task);
             activityCommonService.audit(PROCESS_DEFINITION_KEY,task.getId(),MapUtil.builder()
-                    .put("pass",false)
+                    .put("pass",true)
                     .build());
         }
     }
@@ -64,7 +64,7 @@ public class ActivityCommonServiceImplTest {
 
     @Test
     public void queryCompletedByUser() {
-        List<HistoricTaskInstance> hisTask = activityCommonService.queryCompletedByUser(PROCESS_DEFINITION_KEY,"141304091");
+        List<HistoricTaskInstance> hisTask = activityCommonService.queryCompletedByUser(PROCESS_DEFINITION_KEY,"141304093");
         for (HistoricTaskInstance task : hisTask) {
             show(task);
         }
