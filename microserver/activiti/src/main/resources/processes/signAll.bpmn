@@ -6,7 +6,7 @@
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
     <userTask id="usertask2" name="会签" activiti:assignee="${signer}">
       <extensionElements>
-        <activiti:taskListener event="complete" class="com.cjh.microserver.service.impl.SignListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.cjh.microserver.activity.listener.SignListener"></activiti:taskListener>
       </extensionElements>
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${signList}" activiti:elementVariable="signer">
         <completionCondition>${pass == false}</completionCondition>
