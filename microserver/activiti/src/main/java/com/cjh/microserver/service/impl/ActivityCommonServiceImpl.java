@@ -9,7 +9,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,6 +99,10 @@ public class ActivityCommonServiceImpl implements ActivityCommonService {
     @Override
     public void audit(String processDefinitionKey, String taskId, Map variable) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        if (StringUtils.isBlank(task.getAssignee())) {
+            log.info("无未指定处理人，系统自动处理！");
+            taskService.setAssignee(taskId, "system");
+        }
         taskService.complete(taskId, variable);
         log.info("任务ID:" + task.getId());
         log.info("任务的办理人:" + task.getAssignee());

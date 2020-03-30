@@ -49,7 +49,7 @@ public class ActivityCommonServiceImplTest {
 
     @Test
     public void queryPendingAuditByUser() {
-        List<Task> tasks = activityCommonService.queryPendingAuditByUser(PROCESS_DEFINITION_KEY,"141304093");
+        List<Task> tasks = activityCommonService.queryPendingAuditByUser(PROCESS_DEFINITION_KEY,"system");
         for (Task task : tasks) {
             show(task);
             activityCommonService.audit(PROCESS_DEFINITION_KEY,task.getId(),MapUtil.builder()
@@ -72,6 +72,7 @@ public class ActivityCommonServiceImplTest {
 
     @Test
     public void claim() {
+        activityCommonService.claim(PROCESS_DEFINITION_KEY, "55007", "system");
     }
 
     @Test
