@@ -5,6 +5,7 @@ import com.cjh.microserver.ActivitiApplication;
 import com.cjh.microserver.service.api.ActivityCommonService;
 import lombok.extern.log4j.Log4j2;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskInfo;
 import org.junit.Test;
@@ -100,5 +101,11 @@ public class ActivityCommonServiceImplTest {
     @Test
     public void queryHistoricInstance() {
         activityCommonService.queryHistoricInstance("20200330666");
+    }
+
+    @Test
+    public void getTaskByProcessId() {
+        ProcessDefinition processDefinition = activityCommonService.getProcessDefinition("policyAudit");
+        log.info(processDefinition);
     }
 }

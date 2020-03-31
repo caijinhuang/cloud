@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="policyAudit" name="政策审核" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <userTask id="firstTrial" name="初审" activiti:assignee="${userId}">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${userList}" activiti:elementVariable="userId">
+        <completionCondition>${opt != 3}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <userTask id="jointTrial" name="会审" activiti:assignee="${userId}">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${userList}" activiti:elementVariable="userId">
+        <completionCondition>${opt != 3}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <userTask id="review" name="复审" activiti:assignee="${userId}">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${userList}" activiti:elementVariable="userId">
+        <completionCondition>${opt != 3}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <userTask id="finalTrial" name="终审" activiti:assignee="${userId}">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${userList}" activiti:elementVariable="userId">
+        <completionCondition>${opt != 3}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <userTask id="publicity" name="公示" activiti:assignee="${userId}">
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${userList}" activiti:elementVariable="userId">
+        <completionCondition>${opt != 3}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <userTask id="appropriation" name="拨付"></userTask>
+    <exclusiveGateway id="reviewGw" name="复审网关"></exclusiveGateway>
+    <exclusiveGateway id="finalTrialGw" name="终审网关"></exclusiveGateway>
+    <exclusiveGateway id="firstTrialGw" name="初审网关"></exclusiveGateway>
+    <sequenceFlow id="flow1" sourceRef="firstTrial" targetRef="firstTrialGw"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="review" targetRef="reviewGw"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="finalTrialGw" targetRef="finalTrialGw"></sequenceFlow>
+    <exclusiveGateway id="publicityGw" name="公示网关"></exclusiveGateway>
+    <sequenceFlow id="flow19" sourceRef="publicity" targetRef="publicityGw"></sequenceFlow>
+    <sequenceFlow id="finalTrialPass" name="终审通过" sourceRef="finalTrialGw" targetRef="publicity">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="reviewPass" name="复审通过" sourceRef="reviewGw" targetRef="finalTrialGw">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="firstTrialPass" name="初审通过" sourceRef="firstTrialGw" targetRef="jointTrial">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="publicityPass" name="公示通过" sourceRef="publicityGw" targetRef="appropriation">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow33" sourceRef="appropriation" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="publicityNoPass" name="公示不通过" sourceRef="publicityGw" targetRef="endevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="supplement" name="补交材料"></userTask>
+    <sequenceFlow id="finalTrialRouter" name="终审路由" sourceRef="finalTrialGw" targetRef="routerOrTaskGw">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="routerGw" name="路由网关"></exclusiveGateway>
+    <sequenceFlow id="flow37" sourceRef="supplement" targetRef="routerGw"></sequenceFlow>
+    <sequenceFlow id="toFirstTrial" name="初审" sourceRef="routerGw" targetRef="firstTrial">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${router == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="toFinalTrial" name="终审" sourceRef="routerGw" targetRef="finalTrialGw">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${router == 4}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="toReview" name="复审" sourceRef="routerGw" targetRef="review">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${router == 3}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="toJoinTrial" name="会审" sourceRef="routerGw" targetRef="jointTrial">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${router == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="joinTrialGw" name="会审网关"></exclusiveGateway>
+    <sequenceFlow id="flow44" sourceRef="jointTrial" targetRef="joinTrialGw"></sequenceFlow>
+    <sequenceFlow id="joinTrialPass" name="会审通过" sourceRef="joinTrialGw" targetRef="review">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="joinTrialRouter" name="会审路由" sourceRef="joinTrialGw" targetRef="routerOrTaskGw">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="reviewRouter" name="复审路由" sourceRef="reviewGw" targetRef="routerOrTaskGw">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="routerOrTaskGw" name="路由/补交材料"></exclusiveGateway>
+    <sequenceFlow id="toSupplement" name="材料补交" sourceRef="routerOrTaskGw" targetRef="supplement">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${opt == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="toRouter" name="路由跳转" sourceRef="routerOrTaskGw" targetRef="routerGw">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${opt == 1}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="endevent2" name="End"></endEvent>
+    <sequenceFlow id="toEnd" sourceRef="routerGw" targetRef="endevent2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${router == 5}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="firstTrialRouter" name="初审路由" sourceRef="firstTrialGw" targetRef="routerOrTaskGw">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${auditOpt == 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow58" sourceRef="startevent1" targetRef="routerOrTaskGw"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_policyAudit">
+    <bpmndi:BPMNPlane bpmnElement="policyAudit" id="BPMNPlane_policyAudit">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="610.0" y="689.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="firstTrial" id="BPMNShape_firstTrial">
+        <omgdc:Bounds height="55.0" width="105.0" x="198.0" y="410.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="jointTrial" id="BPMNShape_jointTrial">
+        <omgdc:Bounds height="55.0" width="105.0" x="390.0" y="243.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="review" id="BPMNShape_review">
+        <omgdc:Bounds height="55.0" width="105.0" x="780.0" y="243.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="finalTrial" id="BPMNShape_finalTrial">
+        <omgdc:Bounds height="55.0" width="105.0" x="995.0" y="410.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="publicity" id="BPMNShape_publicity">
+        <omgdc:Bounds height="55.0" width="105.0" x="995.0" y="768.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="appropriation" id="BPMNShape_appropriation">
+        <omgdc:Bounds height="55.0" width="105.0" x="996.0" y="980.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="reviewGw" id="BPMNShape_reviewGw">
+        <omgdc:Bounds height="40.0" width="40.0" x="1027.0" y="250.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="finalTrialGw" id="BPMNShape_finalTrialGw">
+        <omgdc:Bounds height="40.0" width="40.0" x="1027.0" y="568.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="firstTrialGw" id="BPMNShape_firstTrialGw">
+        <omgdc:Bounds height="40.0" width="40.0" x="230.0" y="250.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="publicityGw" id="BPMNShape_publicityGw">
+        <omgdc:Bounds height="40.0" width="40.0" x="1028.0" y="890.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="840.0" y="990.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="supplement" id="BPMNShape_supplement">
+        <omgdc:Bounds height="55.0" width="105.0" x="780.0" y="488.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="routerGw" id="BPMNShape_routerGw">
+        <omgdc:Bounds height="40.0" width="40.0" x="607.0" y="417.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="joinTrialGw" id="BPMNShape_joinTrialGw">
+        <omgdc:Bounds height="40.0" width="40.0" x="607.0" y="250.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="routerOrTaskGw" id="BPMNShape_routerOrTaskGw">
+        <omgdc:Bounds height="40.0" width="40.0" x="607.0" y="568.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent2" id="BPMNShape_endevent2">
+        <omgdc:Bounds height="35.0" width="35.0" x="610.0" y="330.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="250.0" y="410.0"></omgdi:waypoint>
+        <omgdi:waypoint x="250.0" y="290.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="885.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1027.0" y="270.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="1067.0" y="588.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1067.0" y="588.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow19" id="BPMNEdge_flow19">
+        <omgdi:waypoint x="1047.0" y="823.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1048.0" y="890.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="finalTrialPass" id="BPMNEdge_finalTrialPass">
+        <omgdi:waypoint x="1047.0" y="608.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1047.0" y="768.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="1057.0" y="681.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="reviewPass" id="BPMNEdge_reviewPass">
+        <omgdi:waypoint x="1047.0" y="290.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1047.0" y="568.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="1057.0" y="319.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="firstTrialPass" id="BPMNEdge_firstTrialPass">
+        <omgdi:waypoint x="270.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="390.0" y="270.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="280.0" y="270.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="publicityPass" id="BPMNEdge_publicityPass">
+        <omgdi:waypoint x="1048.0" y="930.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1048.0" y="980.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="1057.0" y="943.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow33" id="BPMNEdge_flow33">
+        <omgdi:waypoint x="996.0" y="1007.0"></omgdi:waypoint>
+        <omgdi:waypoint x="875.0" y="1007.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="publicityNoPass" id="BPMNEdge_publicityNoPass">
+        <omgdi:waypoint x="1048.0" y="930.0"></omgdi:waypoint>
+        <omgdi:waypoint x="857.0" y="990.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="905.0" y="941.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="finalTrialRouter" id="BPMNEdge_finalTrialRouter">
+        <omgdi:waypoint x="1027.0" y="588.0"></omgdi:waypoint>
+        <omgdi:waypoint x="647.0" y="588.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="821.0" y="595.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow37" id="BPMNEdge_flow37">
+        <omgdi:waypoint x="832.0" y="488.0"></omgdi:waypoint>
+        <omgdi:waypoint x="627.0" y="457.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toFirstTrial" id="BPMNEdge_toFirstTrial">
+        <omgdi:waypoint x="607.0" y="437.0"></omgdi:waypoint>
+        <omgdi:waypoint x="303.0" y="437.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="431.0" y="437.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toFinalTrial" id="BPMNEdge_toFinalTrial">
+        <omgdi:waypoint x="627.0" y="457.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1047.0" y="568.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="778.0" y="437.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toReview" id="BPMNEdge_toReview">
+        <omgdi:waypoint x="627.0" y="417.0"></omgdi:waypoint>
+        <omgdi:waypoint x="832.0" y="298.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="680.0" y="338.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toJoinTrial" id="BPMNEdge_toJoinTrial">
+        <omgdi:waypoint x="627.0" y="417.0"></omgdi:waypoint>
+        <omgdi:waypoint x="442.0" y="298.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="532.0" y="363.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow44" id="BPMNEdge_flow44">
+        <omgdi:waypoint x="495.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="607.0" y="270.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="joinTrialPass" id="BPMNEdge_joinTrialPass">
+        <omgdi:waypoint x="647.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="780.0" y="270.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="680.0" y="270.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="joinTrialRouter" id="BPMNEdge_joinTrialRouter">
+        <omgdi:waypoint x="627.0" y="250.0"></omgdi:waypoint>
+        <omgdi:waypoint x="626.0" y="192.0"></omgdi:waypoint>
+        <omgdi:waypoint x="113.0" y="192.0"></omgdi:waypoint>
+        <omgdi:waypoint x="113.0" y="457.0"></omgdi:waypoint>
+        <omgdi:waypoint x="113.0" y="588.0"></omgdi:waypoint>
+        <omgdi:waypoint x="607.0" y="588.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="506.0" y="191.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="reviewRouter" id="BPMNEdge_reviewRouter">
+        <omgdi:waypoint x="1047.0" y="250.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1047.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="81.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="81.0" y="588.0"></omgdi:waypoint>
+        <omgdi:waypoint x="607.0" y="588.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="884.0" y="161.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toSupplement" id="BPMNEdge_toSupplement">
+        <omgdi:waypoint x="627.0" y="568.0"></omgdi:waypoint>
+        <omgdi:waypoint x="832.0" y="543.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="650.0" y="542.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toRouter" id="BPMNEdge_toRouter">
+        <omgdi:waypoint x="627.0" y="568.0"></omgdi:waypoint>
+        <omgdi:waypoint x="627.0" y="457.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="604.0" y="501.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toEnd" id="BPMNEdge_toEnd">
+        <omgdi:waypoint x="627.0" y="417.0"></omgdi:waypoint>
+        <omgdi:waypoint x="627.0" y="365.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="firstTrialRouter" id="BPMNEdge_firstTrialRouter">
+        <omgdi:waypoint x="230.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="143.0" y="270.0"></omgdi:waypoint>
+        <omgdi:waypoint x="143.0" y="587.0"></omgdi:waypoint>
+        <omgdi:waypoint x="607.0" y="588.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="132.0" y="395.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow58" id="BPMNEdge_flow58">
+        <omgdi:waypoint x="627.0" y="689.0"></omgdi:waypoint>
+        <omgdi:waypoint x="627.0" y="608.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

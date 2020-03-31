@@ -2,17 +2,23 @@ package com.cjh.microserver.service.impl;
 
 import com.cjh.microserver.service.api.ActivityCommonService;
 import lombok.extern.log4j.Log4j2;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -111,6 +117,24 @@ public class ActivityCommonServiceImpl implements ActivityCommonService {
                 log.info("=======================================");
             }
         }
+    }
+
+    @Override
+    public ProcessDefinition getProcessDefinition(String processDefinitionKey){
+        ProcessDefinition pd = repositoryService.createProcessDefinitionQuery().processDefinitionKey(processDefinitionKey).latestVersion().singleResult();
+        if (pd == null) {
+            log.error("找不到流程定义key：{}", processDefinitionKey);
+            return null;
+        }
+        BpmnModel bm = repositoryService.getBpmnModel(pd.getId());
+        Process process = bm.getProcesses().get(0);
+        Collection<FlowElement> flowElements = process.getFlowElements();
+        flowElements.forEach(element->{
+            if(element instanceof UserTask){
+                log.info("任务名称:{}",element.getName());
+            }
+        });
+        return pd;
     }
 
     @Override

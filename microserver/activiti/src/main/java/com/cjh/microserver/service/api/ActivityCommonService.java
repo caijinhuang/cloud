@@ -1,6 +1,7 @@
 package com.cjh.microserver.service.api;
 
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 
 import java.util.List;
@@ -58,6 +59,13 @@ public interface ActivityCommonService {
      * @param businessKey 业务id
      */
     void queryHistoricInstance(String businessKey);
+
+    /**
+     * 获取流程定义
+     * @param processDefinitionKey 流程定义key
+     * @return
+     */
+    ProcessDefinition getProcessDefinition(String processDefinitionKey);
 
     /**
      * 任务签收

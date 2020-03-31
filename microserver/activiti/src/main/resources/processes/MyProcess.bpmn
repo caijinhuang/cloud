@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/testm1510735932336">
-  <process id="leave" isExecutable="true" isClosed="false" processType="None">
+  <process id="leave" name="流程定义" isExecutable="true" isClosed="false" processType="None">
     <startEvent id="_2" name="StartEvent"></startEvent>
     <endEvent id="_3" name="EndEvent"></endEvent>
     <userTask id="approve" name="经理审批" activiti:candidateUsers="${userIds}" activiti:candidateGroups="${groups}"></userTask>
