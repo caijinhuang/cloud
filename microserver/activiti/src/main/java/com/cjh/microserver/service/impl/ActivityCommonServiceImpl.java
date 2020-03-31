@@ -44,8 +44,10 @@ public class ActivityCommonServiceImpl implements ActivityCommonService {
     @Override
     public void apply(String processDefinitionKey, Map variable) {
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey,"20200330666", variable);
-        Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
-        taskService.complete(task.getId(), variable);
+        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
+//        if (tasks.size() == 1){
+//            taskService.complete(tasks.get(0).getId(), variable);
+//        }
     }
 
     @Override
